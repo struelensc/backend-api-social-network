@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const moment = require("moment");
 
 // The reactionSchema defines the shape for the reaction subdocument
 const reactionSchema = new Schema(
@@ -19,7 +20,7 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: formatDate,
+      get: (timestamp) => moment(timestamp).format("MMM DD, YYYY [at] hh:mm a"),
     },
   },
   {
@@ -41,7 +42,7 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: formatDate,
+      get: (timestamp) => moment(timestamp).format("MMM DD, YYYY [at] hh:mm a"),
     },
     username: {
       type: String,
@@ -56,16 +57,6 @@ const thoughtSchema = new Schema(
     },
   }
 );
-
-// Function to format date timestamps
-function formatDate(date) {
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
-  var fullDate = `${month}/${day}/${year}`;
-
-  return fullDate;
-}
 
 // A virtual property `reactionCount` that returns the number of reactions per thought
 thoughtSchema.virtual("reactionCount").get(function () {
